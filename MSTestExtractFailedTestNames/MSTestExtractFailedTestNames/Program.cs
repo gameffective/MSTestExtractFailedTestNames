@@ -76,10 +76,12 @@ namespace MSTestExtractFailedTestNames
 
             foreach (Match m in Regex.Matches(fileContent, SEARCH_REGEX))
             {
-                Console.WriteLine("'{0}' found at index {1}.",
-                                  m.Groups[1].Value, m.Index);
+                string testName = m.Groups[1].Value.Split(' ')[0];
 
-                result.Append(m.Groups[1].Value + ",");
+                Console.WriteLine("'{0}' found at index {1}.",
+                                 testName, m.Index);
+
+                result.Append(testName + ",");
             }
 
             return result.ToString();
