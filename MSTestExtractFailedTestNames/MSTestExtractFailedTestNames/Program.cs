@@ -21,14 +21,17 @@ namespace MSTestExtractFailedTestNames
             }
             Console.WriteLine("RunOnlyFailedTests variable value is: " + runOnlyFailedTests);
 
-
-
+            
             if (runOnlyFailedTests.Equals("true", StringComparison.CurrentCultureIgnoreCase))
             {
-                string latestTRXFileName = findLatestTRXFile();
+                Console.WriteLine("Setting ListOfFailedTestsToReRun variable to: " + "Quick1_Test");
+                Environment.SetEnvironmentVariable("ListOfFailedTestsToReRun", "Quick1_Test");
+
+                /*string latestTRXFileName = findLatestTRXFile();
                 string listOfFailedTests = readFailedTestsFromTRXFile(latestTRXFileName);
-                Environment.SetEnvironmentVariable("ListOfFailedTestsToReRun", listOfFailedTests);
+                Environment.SetEnvironmentVariable("ListOfFailedTestsToReRun", listOfFailedTests);*/
             }
+            
         }
 
         private static string findLatestTRXFile()
