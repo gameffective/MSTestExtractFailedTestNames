@@ -21,16 +21,21 @@ namespace MSTestExtractFailedTestNames
             }
             Console.WriteLine("RunOnlyFailedTests variable value is: " + runOnlyFailedTests);
 
-            
-            if (runOnlyFailedTests.Equals("true", StringComparison.CurrentCultureIgnoreCase))
+            // if no need to run only failed tests - terminate now
+            if (!runOnlyFailedTests.Equals("true", StringComparison.CurrentCultureIgnoreCase))
             {
-                Console.WriteLine("Setting ListOfFailedTestsToReRun variable to: " + "Quick1_Test");
-                Environment.SetEnvironmentVariable("ListOfFailedTestsToReRun", "Quick1_Test");
+                Console.WriteLine("As not asked to run only failed tests, terminating now..");
+                Environment.Exit(0);
+            }
+
+            // otherwise we need to find list of failed tests names and send it back as env param
+            Console.WriteLine("Setting ListOfFailedTestsToReRun variable to: " + "GamEffective.QuickTests.Quick1_Test");
+            Environment.SetEnvironmentVariable("ListOfFailedTestsToReRun", "GamEffective.QuickTests.Quick1_Test");
 
                 /*string latestTRXFileName = findLatestTRXFile();
                 string listOfFailedTests = readFailedTestsFromTRXFile(latestTRXFileName);
                 Environment.SetEnvironmentVariable("ListOfFailedTestsToReRun", listOfFailedTests);*/
-            }
+            
             
         }
 
