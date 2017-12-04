@@ -14,7 +14,14 @@ namespace MSTestExtractFailedTestNames
 
             // read param value
             string runOnlyFailedTests = Environment.GetEnvironmentVariable("RunOnlyFailedTests");
-            Console.WriteLine("RunOnlyFailedTests: " + runOnlyFailedTests);
+            if (runOnlyFailedTests == null)
+            {
+                Console.WriteLine("Environment variable 'runOnlyFailedTests' not found");
+                Environment.Exit(-1);
+            }
+            Console.WriteLine("RunOnlyFailedTests variable value is: " + runOnlyFailedTests);
+
+
 
             if (runOnlyFailedTests.Equals("true", StringComparison.CurrentCultureIgnoreCase))
             {
