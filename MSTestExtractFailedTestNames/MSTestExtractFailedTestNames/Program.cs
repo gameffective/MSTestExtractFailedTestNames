@@ -79,7 +79,7 @@ namespace MSTestExtractFailedTestNames
                 Console.WriteLine("'{0}' found at index {1}.",
                                   m.Groups[1].Value, m.Index);
 
-                result.AppendLine(m.Groups[1].Value);
+                result.Append(m.Groups[1].Value + ",");
             }
 
             return result.ToString();
