@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
 namespace MSTestExtractFailedTestNames
 {
@@ -41,10 +39,12 @@ namespace MSTestExtractFailedTestNames
             string latestTRXFileName = findLatestTRXFile(folderPath);
             string listOfFailedTests = readFailedTestsFromTRXFile(latestTRXFileName);
 
-            // otherwise we need to find list of failed tests names and send it back as env param
+            // output is sent via environment variable as well as console output for teamCity
             Console.WriteLine("Setting ListOfFailedTestsToReRun variable to: " + listOfFailedTests);
             Console.WriteLine("##teamcity[setParameter name='env.ListOfFailedTestsToReRun' value='" + listOfFailedTests + "']");
             Environment.SetEnvironmentVariable("ListOfFailedTestsToReRun", listOfFailedTests);
+
+            Console.WriteLine("Done!");
         }
 
         private static string findLatestTRXFile(string folderPath)
@@ -76,6 +76,8 @@ namespace MSTestExtractFailedTestNames
 
             foreach (Match m in Regex.Matches(fileContent, SEARCH_REGEX))
             {
+                // extract test name from current match - m.Groups[1].Value
+                // in order to remove additional problematic text of (Data Row 0) - .Split(' ')[0]
                 string testName = m.Groups[1].Value.Split(' ')[0];
 
                 Console.WriteLine("'{0}' found at index {1}.",
