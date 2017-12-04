@@ -29,7 +29,8 @@ namespace MSTestExtractFailedTestNames
             }
 
             // otherwise we need to find list of failed tests names and send it back as env param
-            Console.WriteLine("Setting ListOfFailedTestsToReRun variable to: " + "GamEffective.QuickTests.Quick1_Test");
+            Console.WriteLine("Setting ListOfFailedTestsToReRun variable to: " + "Quick1_Test");
+            Console.WriteLine("##teamcity[setParameter name='env.ListOfFailedTestsToReRun' value='Quick1_Test']");
             Environment.SetEnvironmentVariable("ListOfFailedTestsToReRun", "GamEffective.QuickTests.Quick1_Test");
 
                 /*string latestTRXFileName = findLatestTRXFile();
