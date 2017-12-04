@@ -3,12 +3,15 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace MSTestExtractFailedTestNames
 {
     class Program
     {
+        private const string SEARCH_REGEX = "<UnitTestResult.*testName=\"([^\\\"]*)\".*outcome=\"Failed\".*\">";
+
         static void Main(string[] args)
         {
             Console.WriteLine("Starting...");
@@ -37,16 +40,11 @@ namespace MSTestExtractFailedTestNames
             string folderPath = args[0];
             string latestTRXFileName = findLatestTRXFile(folderPath);
             string listOfFailedTests = readFailedTestsFromTRXFile(latestTRXFileName);
-            Environment.SetEnvironmentVariable("ListOfFailedTestsToReRun", listOfFailedTests);
-
-
-
 
             // otherwise we need to find list of failed tests names and send it back as env param
-            Console.WriteLine("Setting ListOfFailedTestsToReRun variable to: " + "Quick1_Test");
-            Console.WriteLine("##teamcity[setParameter name='env.ListOfFailedTestsToReRun' value='Quick1_Test']");
-            Environment.SetEnvironmentVariable("ListOfFailedTestsToReRun", "GamEffective.QuickTests.Quick1_Test");
-
+            Console.WriteLine("Setting ListOfFailedTestsToReRun variable to: " + listOfFailedTests);
+            Console.WriteLine("##teamcity[setParameter name='env.ListOfFailedTestsToReRun' value='" + listOfFailedTests + "']");
+            Environment.SetEnvironmentVariable("ListOfFailedTestsToReRun", listOfFailedTests);
         }
 
         private static string findLatestTRXFile(string folderPath)
@@ -67,21 +65,26 @@ namespace MSTestExtractFailedTestNames
                 showErrorAndFinish("No TRX results file found in folder " + folderPath);
             }
 
-            return parseTRXFile(myFile);
+            Console.WriteLine("Working on latest TRX file: " + myFile.FullName);
+            return myFile.FullName;
         }
 
-        private static string parseTRXFile(FileInfo myFile)
+        private static string readFailedTestsFromTRXFile(string filePath)
         {
-            string fileContent = File.ReadAllText(myFile.FullName);
+            string fileContent = File.ReadAllText(filePath);
+            StringBuilder result = new StringBuilder();
 
-            return fileContent;
+            foreach (Match m in Regex.Matches(fileContent, SEARCH_REGEX))
+            {
+                Console.WriteLine("'{0}' found at index {1}.",
+                                  m.Groups[1].Value, m.Index);
 
+                result.AppendLine(m.Groups[1].Value);
+            }
+
+            return result.ToString();
         }
 
-        private static string readFailedTestsFromTRXFile(string latestTRXFileName)
-        {
-            throw new NotImplementedException();
-        }
 
         private static void showErrorAndFinish(string message)
         {
