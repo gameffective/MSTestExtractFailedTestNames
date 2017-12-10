@@ -94,7 +94,7 @@ namespace MSTestExtractFailedTestNames
                 }
             }
 
-            return result.ToString();
+            return "/TestCaseFilter:\"" + result.ToString() + "\"";
         }
 
 
