@@ -73,6 +73,7 @@ namespace MSTestExtractFailedTestNames
         {
             string fileContent = File.ReadAllText(filePath);
             StringBuilder result = new StringBuilder();
+            bool firstTest = true;
 
             foreach (Match m in Regex.Matches(fileContent, SEARCH_REGEX))
             {
@@ -83,10 +84,23 @@ namespace MSTestExtractFailedTestNames
                 Console.WriteLine("'{0}' found at index {1}.",
                                  testName, m.Index);
 
-                result.Append("|Name=" + testName);
+                if (firstTest)
+                {
+                    firstTest = false;
+                    result.Append("&(Name=" + testName);
+                }
+                else
+                {
+                    result.Append("|Name=" + testName);
+                }
             }
             
-            return result.ToString();
+            if (String.IsNullOrEmpty(result.ToString()))
+            {
+                return "";
+            }
+
+            return result.ToString() + ")";
         }
 
 
