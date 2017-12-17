@@ -83,7 +83,6 @@ namespace MSTestExtractFailedTestNames
                 Console.WriteLine("'{0}' found at index {1}.",
                                  testName, m.Index);
 
-
                 result.Append("|Name=" + testName);
             }
             
