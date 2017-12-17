@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -72,8 +72,8 @@ namespace MSTestExtractFailedTestNames
         private static string readFailedTestsFromTRXFile(string filePath)
         {
             string fileContent = File.ReadAllText(filePath);
-            StringBuilder result = new StringBuilder();            
-            bool isFirstTest = true;
+            StringBuilder result = new StringBuilder();
+
             foreach (Match m in Regex.Matches(fileContent, SEARCH_REGEX))
             {
                 // extract test name from current match - m.Groups[1].Value
@@ -83,18 +83,10 @@ namespace MSTestExtractFailedTestNames
                 Console.WriteLine("'{0}' found at index {1}.",
                                  testName, m.Index);
 
-                if (isFirstTest)
-                {
-                    result.Append("Name=" + testName);
-                    isFirstTest = false;
-                }
-                else
-                {
-                    result.Append("|Name=" + testName);
-                }
+                result.Append("|Name=" + testName);
             }
-
-            return "/TestCaseFilter:" + result.ToString();
+            
+            return result.ToString();
         }
 
 
